@@ -9,7 +9,7 @@ class Transaction{
 	}
 
 	function data_preview($index){
-		$total_data = get_all_data($index);
+		$total_data = self::get_all_data($index);
 		$date = date('Y');		
 		$recent_data = array();
 		if(count($total_data) > 1){
