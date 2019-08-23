@@ -9,7 +9,7 @@ class Transaction{
 	}
 
 	function data_preview($index){
-		$total_data = DB::query('SELECT transact_type, money_spent, card_type, date_of_transact from transactions WHERE username = :uname', array(':uname' => $_SESSION[$index]));
+		$total_data = get_all_data($index);
 		$date = date('Y');		
 		$recent_data = array();
 		if(count($total_data) > 1){
