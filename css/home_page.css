@@ -1,0 +1,16 @@
+.home_page_options{
+	text-align: center;
+	margin-top: 12.5%;
+}
+
+button{
+	background-color: rgb(73, 125, 222);
+	border: none;
+	color:white;
+	background-size: 200px;
+	font-family: Arial;
+	font-size: 25px;
+	border-radius: 5%;
+	padding: 50px 100px;
+	text-decoration: none;
+}
