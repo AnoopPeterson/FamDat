@@ -48,12 +48,12 @@ class Transaction{
 		for($i = 1; $i < count($copy); $i++){
 			$temp = $copy[$i - 1];
 			$j = $i - 1;
-			while((int)($copy[$j]['money_spent']) >= (int)($temp['money_spent'] ) && $j >= 0){
+			while($j >= 0 && (int)($copy[$j]['money_spent']) >= (int)($temp['money_spent'] ) ){
 				#swap
 				$copy[$j + 1] = $copy[$j];
 				$j--;
 			}
-			$copy[j + 1] = $temp;
+			$copy[$j + 1] = $temp;
 
 		}
 		$retVals = array('expend', $copy);
