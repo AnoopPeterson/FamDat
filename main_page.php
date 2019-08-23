@@ -29,7 +29,8 @@
 
 <canvas id="graph_preview" width="1000" height="1000"></canvas>
 
-<script type="text/javascript">
+<script type="text/javascript" >
+	
 </script>
 </body>
 </html>
