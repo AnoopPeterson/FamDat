@@ -24,7 +24,7 @@ class Transaction{
 
 	}
 
-	function add_data(string $transact_type, string $money_spent, string $card_type){ # Work on LATER
+	function add_data(string $transact_type, string $money_spent, string $card_type){
 
 		DB::query('INSERT INTO transactions (transact_type, money_spent, card_type) VALUES (:tt, :ms, :ct)', array(':tt' => $transact_type, ':ms' => $money_spent, ':ct' => $card_type));
 	}
@@ -39,7 +39,7 @@ class Transaction{
 			}
 		}
 		$retVals = array('card', $sorted_by_cards);
-		return json_encode($retVals); #Ok, I'm assuming that when I encode an array, all elements inside also get encoded, but I want to test that. Erase this comment when testing is successful
+		return json_encode($retVals);
 	}
 
 

@@ -28,9 +28,18 @@
 </form>
 
 <canvas id="graph_preview" width="1000" height="1000"></canvas>
+<script type="module">
+import {draw_graphs} from './script/display_graphs.js'; 
 
-<script type="text/javascript" >
-	
+var preview_card = <?php echo $preview_card ?>;
+var preview_expend = <?php echo $preview_expend ?>;
+
+draw_graphs(preview_card);
+draw_graphs(preview_expend);
+var span = document.createElement('span');
+span.textContent = preview_expend[0];
+document.body.appendChild(span);
+
 </script>
 </body>
 </html>
