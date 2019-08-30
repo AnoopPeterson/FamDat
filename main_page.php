@@ -1,4 +1,7 @@
 <?php
+
+# NOTE: IF YOUR JS/PHP/HTML CODE WON'T REFRESH, JUST RESTART APACHE SERVER AND MYSQL
+
 	include 'classes/Transaction.php';
 	session_start();
 
@@ -19,7 +22,7 @@
 <html>
 <head>
 	<title>Main Page</title>
-</head>
+</head>	
 <body>
 <form method="post">
 	<button><a href="logout.php">Logout</a></button>
@@ -37,7 +40,6 @@ import {draw_graphs} from './script/display_graphs.js';
 var preview_card = <?php echo $preview_card ?>;
 var preview_expend = <?php echo $preview_expend ?>;
 var preview_transact = <?php echo $preview_transact ?>;
-
 	
 draw_graphs(preview_expend);
 draw_graphs(preview_card);
