@@ -27,19 +27,21 @@
 	<button><a href="add_data.php">Add a new transaction</a></button>
 </form>
 
-<canvas id="graph_preview" width="1000" height="1000"></canvas>
+<canvas id="preview_card" width="500" height="500"></canvas>
+<canvas id="preview_expend" width="500" height="500"></canvas>
+<canvas id="preview_transact" width="500" height="500"></canvas>
+
 <script type="module">
 import {draw_graphs} from './script/display_graphs.js'; 
 
 var preview_card = <?php echo $preview_card ?>;
 var preview_expend = <?php echo $preview_expend ?>;
+var preview_transact = <?php echo $preview_transact ?>;
 
-draw_graphs(preview_card);
+	
 draw_graphs(preview_expend);
-var span = document.createElement('span');
-span.textContent = preview_expend[0];
-document.body.appendChild(span);
-
+draw_graphs(preview_card);
+draw_graphs(preview_transact);
 </script>
 </body>
 </html>

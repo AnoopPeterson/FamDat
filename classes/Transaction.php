@@ -43,21 +43,18 @@ class Transaction{
 	}
 
 
-	 function sort_by_expend(array $data){
-	 	$copy = $data;
-		for($i = 1; $i < count($copy); $i++){
-			$temp = $copy[$i - 1];
+	function sort_by_expend(array $data){ # Naturally, the one function I didn't do myself is also the one that doesn't work
+		$sorted_by_expends = $data;
+		for ($i = 1; $i < count($data); $i++){
+			$temp = $sorted_by_expends[$i];
 			$j = $i - 1;
-			while($j >= 0 && (int)($copy[$j]['money_spent']) >= (int)($temp['money_spent'] ) ){
-				#swap
-				$copy[$j + 1] = $copy[$j];
+			while ($j >= 0 && $sorted_by_expends[$j]['money_spent'] > $temp['money_spent']){
+				$sorted_by_expends[$j + 1] = $sorted_by_expends[$j];
 				$j--;
 			}
-			$copy[$j + 1] = $temp;
-
+			$sorted_by_expends[$j + 1] = $temp;
 		}
-		$retVals = array('expend', $copy);
-		return json_encode($retVals);
+		return json_encode(array('expend', $sorted_by_expends));
 	}
 
 	function get_transact_type(string $column){
@@ -86,16 +83,27 @@ class Transaction{
 
 
 	function sort_by_transact($data){
-		$transact_types = array(array('0'), array('1'), array('2'), array('3'), array('4'));
+		$sorted_by_transacts = array(array(), array(), array(), array(), array());
 
 		foreach ($data as $entry) {
-			for($i = 0; $i < count($transact_types); $i++){
-				if(self::get_transact_type($entry['transact_type']) == (int)($transact_types[$i][0])){
-					array_push($transact_types[$i], $entry);
+				if(self::get_transact_type($entry['transact_type']) == 0){
+					array_push($sorted_by_transacts[0], $entry);
 				}
-			}
+				if(self::get_transact_type($entry['transact_type']) == 1){
+					array_push($sorted_by_transacts[1], $entry);
+				}
+				if(self::get_transact_type($entry['transact_type']) == 2){
+					array_push($sorted_by_transacts[2], $entry);
+				}
+				if(self::get_transact_type($entry['transact_type']) == 3){
+					array_push($sorted_by_transacts[3], $entry);	
+				}
+				if(self::get_transact_type($entry['transact_type']) == 4){
+					array_push($sorted_by_transacts[4], $entry);
+				}
 		}
-		$retVals = array('transact', $transact_types);
+
+		$retVals = array('transact', $sorted_by_transacts);
 		return json_encode($retVals);
 	}
 }
