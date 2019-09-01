@@ -10,17 +10,12 @@ class Transaction{
 
 	function data_preview($index){
 		$total_data = self::get_all_data($index);
-		$date = date('Y');		
-		$recent_data = array();
-		if(count($total_data) > 1){
-			for ($i = 0; $i < count($total_data); $i++){
-				if(explode('-', ($total_data[$i]['date_of_transact'])[0] == $date)){
-					array_push($recent_data, $total_data[$i]);
-				}
-			}
+		if(count($total_data) > 30){ # If there are more than 30 elements in the array, might need to fix that, depending on how often people actually use this website
+			$recent_data = array_splice($total_data, 0, 29);
 			return $recent_data;
-		} 
-		return $total_data;
+		} else {
+			return $total_data;
+		}
 
 	}
 

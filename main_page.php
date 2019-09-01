@@ -1,11 +1,12 @@
 <?php
 
-# NOTE: IF YOUR JS/PHP/HTML CODE WON'T REFRESH, JUST RESTART APACHE SERVER AND MYSQL
+# NOTE: IF YOUR JS/PHP/HTML CODE WON'T REFRESH, JUST RESTART APACHE SERVER AND MYSQL SERVER
 
 	include 'classes/Transaction.php';
 	session_start();
 
 	$preview = Transaction::data_preview('username');
+	$preview_json = json_encode($preview);
 	$preview_card = Transaction::sort_by_card($preview);
 	$preview_expend = Transaction::sort_by_expend($preview);
 	$preview_transact = Transaction::sort_by_transact($preview);
@@ -21,29 +22,34 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<link rel="stylesheet" type="text/css" href="css/main_page.css">
 	<title>Main Page</title>
 </head>	
 <body>
-<form method="post">
-	<button><a href="logout.php">Logout</a></button>
-	<button name="somethin" value="somethin">Click to view your financial history</button>
-	<button><a href="add_data.php">Add a new transaction</a></button>
-</form>
+<div id = 'options'>	
+	<form method="post">
+		<button><a href="logout.php">Logout</a></button>
+		<button name="somethin" value="somethin">Click to view your financial history</button>
+		<button><a href="add_data.php">Add a new transaction</a></button>
+	</form>
+</div>
 
-<canvas id="preview_card" width="500" height="500"></canvas>
-<canvas id="preview_expend" width="500" height="500"></canvas>
-<canvas id="preview_transact" width="500" height="500"></canvas>
+<canvas id="preview_card" width="550" height="550"></canvas>
+<canvas id="preview_expend" width="550" height="550"></canvas>
+<canvas id="preview_transact" width="550" height="550"></canvas>
 
 <script type="module">
 import {draw_graphs} from './script/display_graphs.js'; 
 
+var preview = <?php echo $preview_json ?>;
 var preview_card = <?php echo $preview_card ?>;
 var preview_expend = <?php echo $preview_expend ?>;
 var preview_transact = <?php echo $preview_transact ?>;
 	
-draw_graphs(preview_expend);
-draw_graphs(preview_card);
-draw_graphs(preview_transact);
+draw_graphs(preview_expend, preview);
+draw_graphs(preview_card, preview);
+draw_graphs(preview_transact, preview);
+
 </script>
 </body>
 </html>
