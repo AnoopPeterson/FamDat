@@ -1,18 +1,19 @@
 /*
 
-	Here are functions which reduce repeated code
+	Here are functions which make the exported function easier to look at
 
 */
 
 function scaling_elem(data, canvas_height) {
-	let largest_elem = -1000000;
+
+	let heights = [];
 	for (var i = 0; i < data.length; i++){
-		if (largest_elem <= data[i]['money_spent']){
-			largest_elem = data[i]['money_spent'];
-			console.log(data[i]['money_spent']);
-		}
-		console.log('largest_elem: ' + largest_elem)
+		heights.push(data[i]['money_spent']);
 	}
+	let largest_elem = heights.reduce(function(a, b) {
+		return Math.max(a, b);
+	});
+
 	return canvas_height/largest_elem;
 }
 
@@ -41,7 +42,9 @@ function draw_card(data, raw_data, startx, bar_spacing, bar_width){
 	// Gets the canvas element
 	let canv = document.getElementById('preview_card');
 	let ctx = canv.getContext('2d');
-	let scaling_const = scaling_elem(raw_data, canv.height);
+	let scaling_const = scaling_elem(raw_data, canv.height - 30);
+
+	console.log(scaling_const);
 
 	vert_line(ctx, startx, canv); // Draws graph lines - need to modulate later
 
@@ -51,7 +54,7 @@ function draw_card(data, raw_data, startx, bar_spacing, bar_width){
 	// Draws the graph itself
 	for (var i = 0; i < data[1].length; i++){ 
 		for (var j = 0; j < data[1][i].length; j++){ 
-			let bar_height = data[1][i][j]['money_spent'] * 0.05;
+			let bar_height = data[1][i][j]['money_spent'] * scaling_const;
 			ctx.fillRect(startx, canv.height - 20 - bar_height, bar_width, bar_height);
 			startx += bar_width + bar_spacing;
 		}
@@ -64,7 +67,8 @@ function draw_card(data, raw_data, startx, bar_spacing, bar_width){
 function draw_expend(data, raw_data, startx, bar_spacing, bar_width){
 	let canv = document.getElementById('preview_expend');
 	let ctx = canv.getContext('2d');
-	let scaling_const = scaling_elem(raw_data, canv.height);
+
+	let scaling_const = scaling_elem(raw_data, canv.height - 30);
 
 	vert_line(ctx, startx, canv);
 
@@ -72,7 +76,7 @@ function draw_expend(data, raw_data, startx, bar_spacing, bar_width){
 	let graph_title = 'Expenditures, Ranked Smallest to Highest';
 
 	for (var i = 0; i < data[1].length; i++){ 
-		let bar_height = data[1][i]['money_spent'] * 0.05;
+		let bar_height = data[1][i]['money_spent'] * scaling_const;
 		ctx.fillRect(startx, canv.width - 20 - bar_height, bar_width, bar_height);
 		startx += bar_width + bar_spacing;
 	}
@@ -83,7 +87,7 @@ function draw_expend(data, raw_data, startx, bar_spacing, bar_width){
 function draw_transact(data, raw_data, startx, bar_spacing, bar_width) {
 	let canv = document.getElementById('preview_transact');
 	let ctx = canv.getContext('2d');
-	let scaling_const = scaling_elem(raw_data, canv.height);
+	let scaling_const = scaling_elem(raw_data, canv.height - 30);
 
 	vert_line(ctx, startx, canv);
 
@@ -93,7 +97,7 @@ function draw_transact(data, raw_data, startx, bar_spacing, bar_width) {
 	for (var i = 0; i < data[1].length; i++){
 		if (data[1][i]){
 			for (var j = 0; j < data[1][i].length; j++){
-					let bar_height = data[1][i][j]['money_spent'] * 0.05;
+					let bar_height = data[1][i][j]['money_spent'] * scaling_const;
 					ctx.fillRect(startx, canv.width - 20 - bar_height, bar_width, bar_height);
 					startx += bar_spacing;
 			}
@@ -112,18 +116,22 @@ function draw_transact(data, raw_data, startx, bar_spacing, bar_width) {
 */
 
 export function draw_graphs(data, raw_data){ 
+
 	let startx = 40;
 	let bar_width = 30;
 	let bar_spacing = 10;
 	let graph_title = '';
 	let bar_height = 0;
 
-	if(data[0] == 'card'){ // If the way they sorted was through cards
+	if(data[0] == 'card'){
 		draw_card(data, raw_data, startx, bar_spacing, bar_width);
+
 	} else if (data[0] == 'expend'){ 
 		draw_expend(data, raw_data, startx, bar_spacing, bar_width);
+
 	} else if (data[0] == 'transact'){
 		draw_transact(data, raw_data, startx, bar_spacing, bar_width);
+
 	} else {
 		console.log('Sorry, but this array isn\'t sorted.');
 	}
