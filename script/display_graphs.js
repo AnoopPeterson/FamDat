@@ -17,8 +17,12 @@ function scaling_elem(data, canvas_height) {
 	return canvas_height/largest_elem;
 }
 
-function bar_spacing(data, canvas_width){
-
+function bar_spacing(data = [], canvas_width, raw_data){ // Is this a good idea?
+	if (data[0] == 'card' || data[0] == 'expend' || data[0] == 'transact' ){
+		return canvas_width / (raw_data.length - 10);
+	} else {
+		return canvas_width / raw_data.length;
+	}
 }
 
 
@@ -38,11 +42,12 @@ function horiz_line(ctx, canv){
 }
 
 
-function draw_card(data, raw_data, startx, bar_spacing, bar_width){
+function draw_card(data, raw_data, startx, bar_width){  // Th
 	// Gets the canvas element
 	let canv = document.getElementById('preview_card');
 	let ctx = canv.getContext('2d');
 	let scaling_const = scaling_elem(raw_data, canv.height - 30);
+	//let bar_spacing = bar_spacing(data, canv.width);
 
 	console.log(scaling_const);
 
@@ -64,7 +69,7 @@ function draw_card(data, raw_data, startx, bar_spacing, bar_width){
 	horiz_line(ctx, canv);
 }
 
-function draw_expend(data, raw_data, startx, bar_spacing, bar_width){
+function draw_expend(data, raw_data, startx, bar_width){
 	let canv = document.getElementById('preview_expend');
 	let ctx = canv.getContext('2d');
 
@@ -84,7 +89,7 @@ function draw_expend(data, raw_data, startx, bar_spacing, bar_width){
 	horiz_line(ctx, canv);
 }
 
-function draw_transact(data, raw_data, startx, bar_spacing, bar_width) {
+function draw_transact(data, raw_data, startx, bar_width) {
 	let canv = document.getElementById('preview_transact');
 	let ctx = canv.getContext('2d');
 	let scaling_const = scaling_elem(raw_data, canv.height - 30);
@@ -98,7 +103,7 @@ function draw_transact(data, raw_data, startx, bar_spacing, bar_width) {
 		if (data[1][i]){
 			for (var j = 0; j < data[1][i].length; j++){
 					let bar_height = data[1][i][j]['money_spent'] * scaling_const;
-					ctx.fillRect(startx, canv.width - 20 - bar_height, bar_width, bar_height);
+					ctx.fillRect(startx, canv.height - 20 - bar_height, bar_width, bar_height);
 					startx += bar_spacing;
 			}
 		} else {
@@ -109,30 +114,66 @@ function draw_transact(data, raw_data, startx, bar_spacing, bar_width) {
 	horiz_line(ctx, canv);
 }
 
+function draw_preview(preview, startx) {
+	let canv = document.getElementById('preview');
+	let ctx = canv.getContext('2d');
+	ctx.fillStyle = 'rgb(255, 0, 0)';
+
+	let scaling_const = scaling_elem(preview, canv.height - 30);
+	let bs = bar_spacing(preview, canv.width);
+
+	vert_line(ctx, startx, canv);
+	horiz_line(ctx, canv);
+	
+	for (var i = 0; i < preview.length; i++){
+		let bar_height = preview[i]['money_spent'] * scaling_const;
+		ctx.fillRect(startx, canv.height - 20 - bar_height, 5, 5);
+		startx += bs;
+	}
+	ctx.closePath();
+}
+
 /* 
 
 	Here's the function which actually draws the graphs
 
 */
 
-export function draw_graphs(data, raw_data){ 
+export function draw_graphs(data = null, raw_data){ 
 
-	let startx = 40;
+/*
+
+	Here's the gist on which values are used for which functions:
+
+	startx: for all of them, but it has to be adjusted for bar graphs vs dot graphs.
+	bar_width: bar graphs only.
+	bar_spacing: weird naming, but it's for both. Again, I'll need to adjust it accordingly for bar graphs.
+	graph_title: for all of them. Every graph needs a title.
+	bar_height: like bar_spacing, but it's meant to be the value of the dot graphs, and the starting point for bar graphs (remember, js coordinates are different to what we're used to.)
+	
+	As you can see, since this function is meant to be used for any type of graph (cuz I'm too lazy to make a new file just for the previewing), I need things to be a bit generalized. So keep that in mind.
+	
+*/
+
+	let startx = 15;
 	let bar_width = 30;
-	let bar_spacing = 10;
 	let graph_title = '';
 	let bar_height = 0;
 
 	if(data[0] == 'card'){
-		draw_card(data, raw_data, startx, bar_spacing, bar_width);
+		startx = 40;
+		draw_card(data, raw_data, startx, bar_width);
 
-	} else if (data[0] == 'expend'){ 
-		draw_expend(data, raw_data, startx, bar_spacing, bar_width);
+	} else if (data[0] == 'expend'){
+		startx = 40; 
+		draw_expend(data, raw_data, startx, bar_width);
 
 	} else if (data[0] == 'transact'){
-		draw_transact(data, raw_data, startx, bar_spacing, bar_width);
+		startx = 40;
+		draw_transact(data, raw_data, startx, bar_width);
 
 	} else {
-		console.log('Sorry, but this array isn\'t sorted.');
+		draw_preview(raw_data, startx);
+
 	}
 }

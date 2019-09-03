@@ -1,15 +1,11 @@
 <?php
 
-# NOTE: IF YOUR JS/PHP/HTML CODE WON'T REFRESH, JUST RESTART APACHE SERVER AND MYSQL SERVER
+	# NOTE: IF YOUR JS/PHP/HTML CODE WON'T REFRESH, JUST RESTART APACHE SERVER AND MYSQL SERVER
 
 	include 'classes/Transaction.php';
 	session_start();
 
-	$preview = Transaction::data_preview('username');
-	$preview_json = json_encode($preview);
-	$preview_card = Transaction::sort_by_card($preview);
-	$preview_expend = Transaction::sort_by_expend($preview);
-	$preview_transact = Transaction::sort_by_transact($preview);
+	$preview = json_encode(Transaction::data_preview('username'));
 
 	if (isset($_POST['somethin'])) {
 		$all_data = Transaction::get_all_data('username');
@@ -26,7 +22,7 @@
 	<title>Main Page</title>
 </head>	
 <body>
-<div id = 'options'>	
+<div id = 'options' style="margin-bottom: 50px">	
 	<form method="post">
 		<button><a href="logout.php">Logout</a></button>
 		<button name="somethin" value="somethin">Click to view your financial history</button>
@@ -34,21 +30,15 @@
 	</form>
 </div>
 
-<canvas id="preview_card" width="550" height="550"></canvas>
-<canvas id="preview_expend" width="550" height="550"></canvas>
-<canvas id="preview_transact" width="550" height="550"></canvas>
+<canvas id="preview" width="500" height="500"></canvas>
 
 <script type="module">
 import {draw_graphs} from './script/display_graphs.js'; 
 
-var preview = <?php echo $preview_json ?>;
-var preview_card = <?php echo $preview_card ?>;
-var preview_expend = <?php echo $preview_expend ?>;
-var preview_transact = <?php echo $preview_transact ?>;
+var preview = <?php echo $preview ?>;
 	
-draw_graphs(preview_expend, preview);
-draw_graphs(preview_card, preview);
-draw_graphs(preview_transact, preview);
+draw_graphs(preview); 
+
 
 </script>
 </body>
